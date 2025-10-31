@@ -1,14 +1,17 @@
 export default async function handler(req, res) {
     
 
-    if(req.method !== "POST"){
-        return res.status(405).json({ error: "Method Not Allowed" });
-    }
+  // Only accept POST
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST"); 
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
 
     try {
         
-        const { message } = await req.json();
-
+      const message = req.body?.message || req.query?.message;
+      
         if (!message || !message.trim()) {
             return res.status(400).json({ error: "Message is required" });
           }
@@ -16,7 +19,7 @@ export default async function handler(req, res) {
           const response = await fetch("https://router.huggingface.co/v1/chat/completions",{
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer: ${process.env.HF_API_KEY}`,
+                    "Authorization": `Bearer ${process.env.HF_API_KEY}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
