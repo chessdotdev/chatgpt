@@ -1,7 +1,5 @@
 
 
-console.log("hello");
-
 async function sendMessage() {
   const input = document.getElementById("input-chat");
   const result = document.getElementById("result");
